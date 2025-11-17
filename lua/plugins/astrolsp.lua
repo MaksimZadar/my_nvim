@@ -31,7 +31,7 @@ return {
         -- disable lua_ls formatting capability if you want to use StyLua to format your lua code
         -- "lua_ls",
       },
-      timeout_ms = 1000, -- default format timeout
+      timeout_ms = 500, -- default format timeout
       -- filter = function(client) -- fully override the default formatting function
       --   return true
       -- end
@@ -40,10 +40,67 @@ return {
     servers = {
       -- "pyright"
     },
+    mason_lspconfig = {
+      servers = {
+        gh_actions_ls = {
+          filetypes = {"yaml.github"},
+          package = "gh-actions-language-server",
+          config = {
+            cmd = { 'gh-actions-language-server', '--stdio' },
+            filetypes = { 'yaml.github' },
+            root_dir = require("lspconfig.util").root_pattern('.github'),
+            single_file_support = true,
+            capabilities = {
+              workspace = {
+                didChangeWorkspaceFolders = {
+                  dynamicRegistration = true,
+                },
+              },
+            },
+          }
+        }
+      }
+    },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
     config = {
-      -- clangd = { capabilities = { offsetEncoding = "utf-8" } },
+      volar = {
+        on_init = function(client)
+          client.handlers["tsserver/request"] = function(_, result, context)
+            local ts_clients = vim.lsp.get_clients({ bufnr = context.bufnr, name = "ts_ls" })
+            if #ts_clients == 0 then
+              vim.notify("Could not find `ts_ls` lsp client, `volar` would not work without it.", vim.log.levels.ERROR)
+              return
+            end
+            local ts_client = ts_clients[1]
+            local param = unpack(result)
+            local id, command, payload = unpack(param)
+            ts_client:exec_cmd({
+              title = "volar_request_forward",
+              command = "typescript.tsserverRequest",
+              arguments = { command, payload },
+            }, { bufnr = context.bufnr }, function(_, r)
+              local response = r and r.body
+              local response_data = { { id, response } }
+              ---@diagnostic disable-next-line: param-type-mismatch
+              client:notify("tsserver/response", response_data)
+            end)
+          end
+        end,
+      },
+      ts_ls = {
+        init_options = {
+          plugins = {
+            {
+              name = "@vue/typescript-plugin",
+              location = vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+              languages = { "vue" },
+              configNamespace = "typescript",
+            },
+          },
+        },
+        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+      },
     },
     -- customize how language servers are attached
     handlers = {
@@ -62,7 +119,6 @@ return {
         -- can either be a string of a client capability or a function of `fun(client, bufnr): boolean`
         -- condition will be resolved for each client on each execution and if it ever fails for all clients,
         -- the auto commands will be deleted for that buffer
-        cond = "textDocument/codeLens",
         -- cond = function(client, bufnr) return client.name == "lua_ls" end,
         -- list of auto commands to set
         {
@@ -92,6 +148,10 @@ return {
             return client.supports_method "textDocument/semanticTokens/full" and vim.lsp.semantic_tokens ~= nil
           end,
         },
+        K = {
+          function() vim.lsp.buf.hover() end,
+          desc = "Hover info",
+        }
       },
     },
     -- A custom `on_attach` function to be run after the default `on_attach` function
@@ -99,6 +159,7 @@ return {
     on_attach = function(client, bufnr)
       -- this would disable semanticTokensProvider for all clients
       -- client.server_capabilities.semanticTokensProvider = nil
+      require('lspconfig').gh_actions_ls.setup({})
     end,
   },
 }
