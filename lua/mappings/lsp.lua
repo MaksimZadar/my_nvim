@@ -21,6 +21,8 @@ map("n", "<Leader>li", function()
   vim.cmd.checkhealth "vim.lsp"
 end, { desc = "LSP Information" })
 
+map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "Code actions" })
+
 -- Diagnostic navigation by severity
 map("n", "]e", function()
   vim.diagnostic.jump { count = vim.v.count1, severity = vim.diagnostic.severity.ERROR }
@@ -52,3 +54,8 @@ end, { desc = "Search diagnostics" })
 map("n", "<Leader>ls", function()
   require("telescope.builtin").lsp_document_symbols()
 end, { desc = "Search symbols" })
+
+-- Find references (via Telescope)
+map("n", "<Leader>lR", function()
+  require("telescope.builtin").lsp_references()
+end, { desc = "Find references" })
