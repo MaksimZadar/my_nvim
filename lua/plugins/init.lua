@@ -121,4 +121,19 @@ return {
       },
     },
   },
+
+  -- Outline: symbol sidebar on the right (toggle with <Leader>lS)
+  {
+    "hedyhli/outline.nvim",
+    cmd = { "Outline", "OutlineOpen" },
+    opts = {
+      outline_window = {
+        position = "right",
+        width = 30,
+        auto_close = true,
+        auto_jump = false,
+        show_cursorline = true,
+      },
+    },
+  },
 }

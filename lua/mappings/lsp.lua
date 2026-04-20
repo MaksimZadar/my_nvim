@@ -59,3 +59,6 @@ end, { desc = "Search symbols" })
 map("n", "<Leader>lR", function()
   require("telescope.builtin").lsp_references()
 end, { desc = "Find references" })
+
+-- Toggle symbol outline sidebar
+map("n", "<Leader>lS", "<Cmd>Outline!<CR>", { desc = "Toggle symbol outline" })
