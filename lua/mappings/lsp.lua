@@ -61,4 +61,4 @@ map("n", "<Leader>lR", function()
 end, { desc = "Find references" })
 
 -- Toggle symbol outline sidebar
-map("n", "<Leader>lS", "<Cmd>Outline!<CR>", { desc = "Toggle symbol outline" })
+map("n", "<Leader>lS", "<Cmd>Outline<CR>", { desc = "Toggle symbol outline" })
