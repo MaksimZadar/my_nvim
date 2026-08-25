@@ -22,6 +22,7 @@ map("n", "<Leader>li", function()
 end, { desc = "LSP Information" })
 
 map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "Code actions" })
+map("n", "<leader>ll", vim.lsp.codelens.run, { desc = "Run codelens action" })
 
 -- Diagnostic navigation by severity
 map("n", "]e", function()
@@ -42,7 +43,7 @@ end, { desc = "Previous warning" })
 
 -- Format (relocated from NvChad's <leader>fm to <leader>lf)
 map({ "n", "v" }, "<Leader>lf", function()
-  require("conform").format { lsp_fallback = true }
+  require("conform").format({ timeout_ms = 10000, lsp_format = "fallback" })
 end, { desc = "Format file" })
 
 -- Search diagnostics (via Telescope)
