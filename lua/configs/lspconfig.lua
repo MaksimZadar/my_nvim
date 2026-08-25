@@ -1,40 +1,44 @@
 require("nvchad.configs.lspconfig").defaults()
 
-local servers = { "html", "cssls" }
-vim.lsp.enable(servers)
-
-vim.lsp.config("csharp_ls", {
-  on_init = function(client, _)
-    -- Override NvChad's default on_init to keep semantic tokens enabled for csharp_ls
-  end,
-  cmd = function(dispatchers, config)
-    return vim.lsp.rpc.start({ 'csharp-ls', '--features', 'metadata-uris' }, dispatchers, {
-      -- csharp-ls attempt to locate sln, slnx or csproj files from cwd, so set cwd to root directory.
-      -- If cmd_cwd is provided, use it instead.
-      cwd = config.cmd_cwd or config.root_dir,
-      env = config.cmd_env,
-      detached = config.detached,
-    })
-  end,
+vim.lsp.config("roslyn_ls", {
+  cmd = {
+    "/home/maxz/.local/share/nvim/mason/bin/roslyn",
+    "--logLevel", "Trace",
+    "--extensionLogDirectory", "/home/maxz/.local/state/nvim/",
+    "--stdio"
+  },
   settings = {
-    csharp = {
-      logLevel = "debug",
-      applyFormattingOptions = true,
-      useMetadataUris = true,
-      razorSupport = false,
-      locale = "en-US",
-      debug = {
-        debugMode = false,
-        solutionLoadDelay = 0,
-      }
+    ['csharp|background_analysis'] = {
+      dotnet_analyzer_diagnostics_scope = 'openFiles',
+      dotnet_compiler_diagnostics_scope = 'openFiles',
     },
-    capabilities = {
-      experimental = { csharp = { metadataUris = true } }
-    }
+    ['csharp|inlay_hints'] = {
+      csharp_enable_inlay_hints_for_implicit_object_creation = true,
+      csharp_enable_inlay_hints_for_implicit_variable_types = true,
+      csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+      csharp_enable_inlay_hints_for_types = true,
+      dotnet_enable_inlay_hints_for_indexer_parameters = true,
+      dotnet_enable_inlay_hints_for_literal_parameters = true,
+      dotnet_enable_inlay_hints_for_object_creation_parameters = true,
+      dotnet_enable_inlay_hints_for_other_parameters = true,
+      dotnet_enable_inlay_hints_for_parameters = true,
+      dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
+      dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
+      dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
+    },
+    ['csharp|symbol_search'] = {
+      dotnet_search_reference_assemblies = true,
+    },
+    ['csharp|completion'] = {
+      dotnet_show_name_completion_suggestions = true,
+      dotnet_show_completion_items_from_unimported_namespaces = true,
+      dotnet_provide_regex_completions = true,
+    },
+    ['csharp|code_lens'] = {
+      dotnet_enable_references_code_lens = true,
+    },
   },
 })
-
-vim.lsp.enable("csharp_ls")
 
 vim.lsp.config("ts_ls", {
   init_options = {
@@ -50,5 +54,5 @@ vim.lsp.config("ts_ls", {
   filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 })
 
-vim.lsp.enable("ts_ls")
-vim.lsp.enable("vue_ls")
+local servers = { "html", "cssls", "yamlls", "ts_ls", "vue_ls", "roslyn_ls" }
+vim.lsp.enable(servers)
