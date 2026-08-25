@@ -3,48 +3,18 @@ return {
     "stevearc/conform.nvim",
     opts = require "configs.conform",
   },
-
+  {
+    "j-hui/fidget.nvim",
+    opts = {
+      -- options
+    },
+  },
   {
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
     end,
   },
-
-  -- {
-  --   "tris203/roslyn.nvim",
-  --   branch = "0.12",
-  --   ft = { "cs" },
-  --   opts = {
-  --     filewatching = "roslyn",
-  --     debug = true,
-  --   },
-  --   config = function(_, opts)
-  --     require("roslyn").setup(opts)
-  --
-  --     vim.lsp.config("roslyn", {
-  --         settings = {
-  --           ["csharp|code_lens"] = {
-  --             dotnet_enable_references_code_lens = true,
-  --           },
-  --           ["csharp|completion"] = {
-  --             dotnet_show_completion_items_from_unimported_namespaces = true,
-  --             dotnet_show_name_completion_suggestions = true
-  --           },
-  --           ["csharp|inlay_hints"] = {
-  --             dotnet_enable_inlay_hints_for_object_creation_parameters = true,
-  --             dotnet_enable_inlay_hints_for_other_parameters = true,
-  --             dotnet_enable_inlay_hints_for_parameters = true
-  --           },
-  --           ["csharp|background_analysis"] = {
-  --             dotnet_compiler_diagnostics_scope = "openFiles",
-  --             dotnet_analyzer_diagnostics_scope = "openFiles"
-  --           }
-  --         }
-  --     })
-  --   end
-  -- },
-
   {
     "williamboman/mason.nvim",
     opts = {
@@ -62,11 +32,6 @@ return {
       },
     },
   },
-
-  -- ToggleTerm (AstroNvim-style terminal management)
-  -- Keymaps are in lua/mappings/terminal.lua (loaded at startup).
-  -- Lazy-loading via cmd: the <Cmd>ToggleTerm<CR> in the keymaps triggers lazy load automatically.
-  -- Do NOT use a `keys` spec here -- it would overwrite the mappings from terminal.lua.
   {
     "akinsho/toggleterm.nvim",
     version = "*",
@@ -83,8 +48,6 @@ return {
       float_opts = { border = "rounded" },
     },
   },
-
-  -- Gitsigns: override on_attach to add AstroNvim-style buffer-local git mappings
   {
     "lewis6991/gitsigns.nvim",
     opts = {
@@ -93,8 +56,6 @@ return {
       end,
     },
   },
-
-  -- Smart-splits: wrap-around window navigation + multiplexer integration (AstroNvim-style)
   {
     "mrjones2014/smart-splits.nvim",
     lazy = true,
@@ -104,8 +65,6 @@ return {
       ignored_buftypes = { "nofile" },
     },
   },
-
-  -- Which-key: add AstroNvim-style group labels
   {
     "folke/which-key.nvim",
     opts = {
@@ -121,8 +80,6 @@ return {
       },
     },
   },
-
-  -- Outline: symbol sidebar on the right (toggle with <Leader>lS)
   {
     "hedyhli/outline.nvim",
     cmd = { "Outline", "OutlineOpen" },
