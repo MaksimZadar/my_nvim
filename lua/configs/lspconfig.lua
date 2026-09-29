@@ -1,9 +1,16 @@
 require("nvchad.configs.lspconfig").defaults()
 
 vim.lsp.config("roslyn_ls", {
+  capabilities = {
+    workspace = {
+      didChangeWatchedFiles = {
+        dynamicRegistration = false
+      }
+    }
+  },
   cmd = {
     "/home/maxz/.local/share/nvim/mason/bin/roslyn",
-    "--logLevel", "Trace",
+    "--logLevel", "Information",
     "--extensionLogDirectory", "/home/maxz/.local/state/nvim/",
     "--stdio"
   },
